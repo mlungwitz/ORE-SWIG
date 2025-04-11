@@ -28,6 +28,9 @@ using QuantExt::AverageONIndexedCoupon;
 using QuantExt::CappedFlooredAverageONIndexedCoupon;
 using QuantExt::CapFlooredAverageONIndexedCouponPricer;
 using QuantExt::AverageONLeg;
+using QuantExt::CappedFlooredOvernightIndexedCoupon;
+using QuantExt::CappedFlooredOvernightIndexedCouponPricer;
+using QuantExt::BlackOvernightIndexedCouponPricer;
 using namespace std;
 %}
 
@@ -108,4 +111,30 @@ class AverageONLeg {
     AverageONLeg& withCapFlooredAverageONIndexedCouponPricer(
         const ext::shared_ptr<CapFlooredAverageONIndexedCouponPricer>& couponPricer);
     operator Leg() const;
+};
+
+%shared_ptr(CappedFlooredOvernightIndexedCoupon)
+class CappedFlooredOvernightIndexedCoupon : public FloatingRateCoupon {
+	public:
+		CappedFlooredOvernightIndexedCoupon(const ext::shared_ptr<OvernightIndexedCoupon>& underlying,
+											Real cap = Null<Real>(), Real floor = Null<Real>(), bool nakedOption = false,
+											bool localCapFloor = false);
+};
+
+%shared_ptr(CappedFlooredOvernightIndexedCouponPricer)
+class CappedFlooredOvernightIndexedCouponPricer : public FloatingRateCouponPricer {
+	private:
+		CappedFlooredOvernightIndexedCouponPricer();
+
+	public:
+		CappedFlooredOvernightIndexedCouponPricer(const Handle<OptionletVolatilityStructure>& v,
+												  const bool effectiveVolatilityInput = false);
+		Real effectiveCapletVolatility() const;   // only available after capletRate() was called
+		Real effectiveFloorletVolatility() const; // only available after floorletRate() was called												 
+};
+
+%shared_ptr(BlackOvernightIndexedCouponPricer)
+class BlackOvernightIndexedCouponPricer : public CappedFlooredOvernightIndexedCouponPricer {
+	public:
+		using CappedFlooredOvernightIndexedCouponPricer::CappedFlooredOvernightIndexedCouponPricer;
 };
