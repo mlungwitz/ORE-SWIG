@@ -29,11 +29,11 @@ using QuantExt::CappedFlooredAverageONIndexedCoupon;
 using QuantExt::CapFlooredAverageONIndexedCouponPricer;
 using QuantExt::BlackAverageONIndexedCouponPricer;
 using QuantExt::AverageONLeg;
-/*using QuantExt::OvernightIndexedCoupon;
-using QuantExt::CappedFlooredOvernightIndexedCoupon;*/
+//using QuantExt::OvernightIndexedCoupon;
+using QuantExt::CappedFlooredOvernightIndexedCoupon;
 using QuantExt::CappedFlooredOvernightIndexedCouponPricer;
 using QuantExt::BlackOvernightIndexedCouponPricer;
-/*using QuantExt::OvernightLeg;*/
+//using QuantExt::OvernightLeg;
 //using namespace std;
 %}
 
@@ -126,18 +126,21 @@ class AverageONLeg {
         const ext::shared_ptr<CapFlooredAverageONIndexedCouponPricer>& couponPricer);
     operator Leg() const;
 };
-/*
-%shared_ptr(OvernightIndexedCoupon)
-class QuantExt::OvernightIndexedCoupon : public FloatingRateCoupon {
-	public:
-		QuantExt::OvernightIndexedCoupon(const Date& paymentDate, Real nominal, const Date& startDate, const Date& endDate,
-                           const ext::shared_ptr<OvernightIndex>& overnightIndex, Real gearing = 1.0,
-                           Spread spread = 0.0, const Date& refPeriodStart = Date(), const Date& refPeriodEnd = Date(),
-                           const DayCounter& dayCounter = DayCounter(), bool telescopicValueDates = false,
-                           bool includeSpread = false, const Period& lookback = 0 * Days, const Natural rateCutoff = 0,
-                           const Natural fixingDays = Null<Size>(), const Date& rateComputationStartDate = Null<Date>(),
-                           const Date& rateComputationEndDate = Null<Date>());
-};
+
+%rename(OvernightIndexedCouponExt) QuantExt::OvernightIndexedCoupon;
+%shared_ptr(QuantExt::OvernightIndexedCoupon)
+namespace QuantExt {
+	class OvernightIndexedCoupon : public FloatingRateCoupon {
+		public:
+			OvernightIndexedCoupon(const Date& paymentDate, Real nominal, const Date& startDate, const Date& endDate,
+							   const ext::shared_ptr<OvernightIndex>& overnightIndex, Real gearing = 1.0,
+							   Spread spread = 0.0, const Date& refPeriodStart = Date(), const Date& refPeriodEnd = Date(),
+							   const DayCounter& dayCounter = DayCounter(), bool telescopicValueDates = false,
+							   bool includeSpread = false, const Period& lookback = 0 * Days, const Natural rateCutoff = 0,
+							   const Natural fixingDays = Null<Size>(), const Date& rateComputationStartDate = Null<Date>(),
+							   const Date& rateComputationEndDate = Null<Date>());
+	};
+}
 
 %shared_ptr(CappedFlooredOvernightIndexedCoupon)
 class CappedFlooredOvernightIndexedCoupon : public FloatingRateCoupon {
@@ -145,7 +148,7 @@ class CappedFlooredOvernightIndexedCoupon : public FloatingRateCoupon {
 		CappedFlooredOvernightIndexedCoupon(const ext::shared_ptr<QuantExt::OvernightIndexedCoupon>& underlying,
 											Real cap = Null<Real>(), Real floor = Null<Real>(), bool nakedOption = false,
 											bool localCapFloor = false);
-}; */
+}; 
 
 %shared_ptr(CappedFlooredOvernightIndexedCouponPricer)
 class CappedFlooredOvernightIndexedCouponPricer : public FloatingRateCouponPricer {
@@ -164,37 +167,40 @@ class BlackOvernightIndexedCouponPricer : public CappedFlooredOvernightIndexedCo
                                               const bool effectiveVolatilityInput = false);
 };
 
-/* %shared_ptr(OvernightLeg)
-class OvernightLeg {
-	OvernightLeg(const Schedule& schedule, const ext::shared_ptr<OvernightIndex>& overnightIndex);
-	OvernightLeg& withNotionals(Real notional);
-	OvernightLeg& withNotionals(const std::vector<Real>& notionals);
-	OvernightLeg& withPaymentDayCounter(const DayCounter&);
-	OvernightLeg& withPaymentAdjustment(BusinessDayConvention);
-	OvernightLeg& withPaymentCalendar(const Calendar&);
-	OvernightLeg& withPaymentLag(Natural lag);
-	OvernightLeg& withGearings(Real gearing);
-	OvernightLeg& withGearings(const std::vector<Real>& gearings);
-	OvernightLeg& withSpreads(Spread spread);
-	OvernightLeg& withSpreads(const std::vector<Spread>& spreads);
-	OvernightLeg& withTelescopicValueDates(bool telescopicValueDates);
-	OvernightLeg& includeSpread(bool includeSpread);
-	OvernightLeg& withLookback(const Period& lookback);
-	OvernightLeg& withRateCutoff(const Natural rateCutoff);
-	OvernightLeg& withFixingDays(const Natural fixingDays);
-	OvernightLeg& withCaps(Rate cap);
-	OvernightLeg& withCaps(const std::vector<Rate>& caps);
-	OvernightLeg& withFloors(Rate floor);
-	OvernightLeg& withFloors(const std::vector<Rate>& floors);
-	OvernightLeg& withNakedOption(const bool nakedOption);
-	OvernightLeg& withLocalCapFloor(const bool localCapFloor);
-	OvernightLeg& withInArrears(const bool inArrears);
-	OvernightLeg& withLastRecentPeriod(const boost::optional<Period>& lastRecentPeriod);
-	OvernightLeg& withLastRecentPeriodCalendar(const Calendar& lastRecentPeriodCalendar);
-	OvernightLeg& withOvernightIndexedCouponPricer(const ext::shared_ptr<OvernightIndexedCouponPricer>& couponPricer);
-	OvernightLeg& withPaymentDates(const std::vector<Date>& paymentDates);
-	OvernightLeg& withCapFlooredOvernightIndexedCouponPricer(
-		const ext::shared_ptr<CappedFlooredOvernightIndexedCouponPricer>& couponPricer);
-	operator Leg() const;
-}; */
+%rename(OvernightLegExt) QuantExt::OvernightLeg;
+%shared_ptr(QuantExt::OvernightLeg)
+namespace QuantExt {
+	class OvernightLeg {
+		OvernightLeg(const Schedule& schedule, const ext::shared_ptr<OvernightIndex>& overnightIndex);
+		OvernightLeg& withNotionals(Real notional);
+		OvernightLeg& withNotionals(const std::vector<Real>& notionals);
+		OvernightLeg& withPaymentDayCounter(const DayCounter&);
+		OvernightLeg& withPaymentAdjustment(BusinessDayConvention);
+		OvernightLeg& withPaymentCalendar(const Calendar&);
+		OvernightLeg& withPaymentLag(Natural lag);
+		OvernightLeg& withGearings(Real gearing);
+		OvernightLeg& withGearings(const std::vector<Real>& gearings);
+		OvernightLeg& withSpreads(Spread spread);
+		OvernightLeg& withSpreads(const std::vector<Spread>& spreads);
+		OvernightLeg& withTelescopicValueDates(bool telescopicValueDates);
+		OvernightLeg& includeSpread(bool includeSpread);
+		OvernightLeg& withLookback(const Period& lookback);
+		OvernightLeg& withRateCutoff(const Natural rateCutoff);
+		OvernightLeg& withFixingDays(const Natural fixingDays);
+		OvernightLeg& withCaps(Rate cap);
+		OvernightLeg& withCaps(const std::vector<Rate>& caps);
+		OvernightLeg& withFloors(Rate floor);
+		OvernightLeg& withFloors(const std::vector<Rate>& floors);
+		OvernightLeg& withNakedOption(const bool nakedOption);
+		OvernightLeg& withLocalCapFloor(const bool localCapFloor);
+		OvernightLeg& withInArrears(const bool inArrears);
+		OvernightLeg& withLastRecentPeriod(const boost::optional<Period>& lastRecentPeriod);
+		OvernightLeg& withLastRecentPeriodCalendar(const Calendar& lastRecentPeriodCalendar);
+		OvernightLeg& withOvernightIndexedCouponPricer(const ext::shared_ptr<OvernightIndexedCouponPricer>& couponPricer);
+		OvernightLeg& withPaymentDates(const std::vector<Date>& paymentDates);
+		OvernightLeg& withCapFlooredOvernightIndexedCouponPricer(
+			const ext::shared_ptr<CappedFlooredOvernightIndexedCouponPricer>& couponPricer);
+		operator Leg() const;
+	};
+}
 #endif
